@@ -1,3 +1,5 @@
+![Build](https://github.com/thevindu-w/clip_share_desktop/actions/workflows/build.yml/badge.svg?branch=master)
+![Check Style](https://github.com/thevindu-w/clip_share_desktop/actions/workflows/check_style.yml/badge.svg?branch=master)
 ![Last commit](https://img.shields.io/github/last-commit/thevindu-w/clip_share_desktop.svg?color=yellow)
 ![License](https://img.shields.io/github/license/thevindu-w/clip_share_desktop.svg?color=blue)
 
