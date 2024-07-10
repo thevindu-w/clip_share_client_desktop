@@ -26,10 +26,13 @@ package com.clipshare.protocol;
 
 import com.clipshare.netConnection.ServerConnection;
 import com.clipshare.platformUtils.Utils;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class ProtoMethods {
   private static final int MAX_TEXT_LENGTH = 4194304; // 4 MiB
@@ -121,6 +124,33 @@ public final class ProtoMethods {
     return true;
   }
 
+  boolean v1_getImage() {
+    return getImageCommon(GET_IMAGE);
+  }
+
+  String v1_checkInfo() {
+    if (methodInit(INFO)) {
+      return null;
+    }
+    try {
+      String info = readString(MAX_FILE_NAME_LENGTH);
+      if (info == null || info.isEmpty()) {
+        return null;
+      }
+      return info;
+    } catch (Exception ignored) {
+      return null;
+    }
+  }
+
+  boolean v2_getFiles() {
+    return getFilesCommon(2);
+  }
+
+  boolean v2_sendFiles() {
+    return sendFilesCommon(2);
+  }
+
   private boolean getImageCommon(byte method, int display) {
     if (methodInit(method)) {
       return false;
@@ -162,25 +192,6 @@ public final class ProtoMethods {
 
   private boolean getImageCommon(byte method) {
     return getImageCommon(method, 0);
-  }
-
-  boolean v1_getImage() {
-    return getImageCommon(GET_IMAGE);
-  }
-
-  String v1_checkInfo() {
-    if (methodInit(INFO)) {
-      return null;
-    }
-    try {
-      String info = readString(MAX_FILE_NAME_LENGTH);
-      if (info == null || info.isEmpty()) {
-        return null;
-      }
-      return info;
-    } catch (Exception ignored) {
-      return null;
-    }
   }
 
   private boolean getFilesCommon(int version) {
@@ -249,6 +260,86 @@ public final class ProtoMethods {
       if (!status) break;
     }
     return status && utils.finish();
+  }
+
+  boolean sendFilesCommon(int version) {
+    int fileCnt = utils.getRemainingFileCount(version >= 3);
+    if (fileCnt <= 0) return false;
+    if (methodInit(SEND_FILE)) {
+      return false;
+    }
+    try {
+      if (sendSize(fileCnt)) {
+        return false;
+      }
+      for (int fileNum = 0; fileNum < fileCnt; fileNum++) {
+        utils.prepareNextFile(version >= 3);
+        String fileName = utils.getFileName();
+        if (fileName == null || fileName.isEmpty()) {
+          return false;
+        }
+        long fileSize = utils.getFileSize();
+        InputStream inStream = utils.getFileInStream();
+        if (fileSize == -1 && inStream != null) {
+          ArrayList<Byte> tmpList = new ArrayList<>(8192);
+          byte[] tmpArray = new byte[8192];
+          while (true) {
+            int read = inStream.read(tmpArray);
+            if (read < 0) break;
+            List<Byte> boxed = new ArrayList<>(read);
+            for (int i = 0; i < read; i++) {
+              boxed.add(tmpArray[i]);
+            }
+            tmpList.addAll(boxed);
+            if (tmpList.size() > 16777216) throw new Exception("Cannot determine file size");
+          }
+          byte[] bytes = new byte[tmpList.size()];
+          for (int i = 0; i < bytes.length; i++) {
+            bytes[i] = tmpList.get(i);
+          }
+          fileSize = bytes.length;
+          inStream = new ByteArrayInputStream(bytes);
+        }
+        if (fileSize < 0) {
+          if (version == 2) return false;
+          if (version == 3) {
+            if (sendString(fileName)) return false;
+            if (sendSize(fileSize)) return false;
+            continue;
+          }
+        }
+        if (inStream == null) {
+          return false;
+        }
+        if (sendString(fileName)) {
+          return false;
+        }
+        if (sendSize(fileSize)) {
+          return false;
+        }
+        byte[] buf = new byte[BUF_SZ];
+        while (fileSize > 0) {
+          int read_sz = (int) Math.min(fileSize, BUF_SZ);
+          try {
+            read_sz = inStream.read(buf, 0, read_sz);
+          } catch (IOException ex) {
+            return false;
+          }
+          if (read_sz < 0) {
+            return false;
+          } else if (read_sz == 0) {
+            continue;
+          }
+          fileSize -= read_sz;
+          if (this.serverConnection.send(buf, 0, read_sz)) {
+            return false;
+          }
+        }
+      }
+    } catch (Exception ignored) {
+      return false;
+    }
+    return true;
   }
 
   private boolean selectDisplay(int display) {

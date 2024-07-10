@@ -161,7 +161,7 @@ public class Utils {
     return status;
   }
 
-  public boolean prepareNextFile() {
+  public boolean prepareNextFile(boolean includeLeafDirs) {
     try {
       if (this.pendingFiles == null || this.pendingFiles.isEmpty()) return false;
       File f = this.pendingFiles.pop();
@@ -172,6 +172,10 @@ public class Utils {
     } catch (Exception ignored) {
       return false;
     }
+  }
+
+  public boolean prepareNextFile() {
+    return prepareNextFile(false);
   }
 
   public String getFileName() {
