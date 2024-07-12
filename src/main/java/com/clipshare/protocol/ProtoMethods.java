@@ -151,6 +151,22 @@ public final class ProtoMethods {
     return sendFilesCommon(2);
   }
 
+  boolean v3_getFiles() {
+    return getFilesCommon(3);
+  }
+
+  boolean v3_sendFiles() {
+    return sendFilesCommon(3);
+  }
+
+  boolean v3_getCopiedImage() {
+    return getImageCommon(GET_COPIED_IMAGE);
+  }
+
+  boolean v3_getScreenshot(int display) {
+    return getImageCommon(GET_SCREENSHOT, display);
+  }
+
   private boolean getImageCommon(byte method, int display) {
     if (methodInit(method)) {
       return false;

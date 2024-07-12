@@ -1,0 +1,73 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2022-2024 H. Thevindu J. Wijesekera
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package com.clipshare.protocol;
+
+import com.clipshare.netConnection.ServerConnection;
+import com.clipshare.platformUtils.Utils;
+
+public class Proto_v3 extends Proto {
+
+  Proto_v3(ServerConnection serverConnection, Utils utils) {
+    super(serverConnection, utils);
+  }
+
+  @Override
+  public String getText() {
+    return this.protoMethods.v1_getText();
+  }
+
+  @Override
+  public boolean sendText(String text) {
+    return this.protoMethods.v1_sendText(text);
+  }
+
+  @Override
+  public boolean getFile() {
+    return this.protoMethods.v3_getFiles();
+  }
+
+  @Override
+  public boolean sendFile() {
+    return this.protoMethods.v3_sendFiles();
+  }
+
+  @Override
+  public boolean getImage() {
+    return this.protoMethods.v1_getImage();
+  }
+
+  public boolean getCopiedImage() {
+    return this.protoMethods.v3_getCopiedImage();
+  }
+
+  public boolean getScreenshot(int display) {
+    return this.protoMethods.v3_getScreenshot(display);
+  }
+
+  @Override
+  public String checkInfo() {
+    return this.protoMethods.v1_checkInfo();
+  }
+}
