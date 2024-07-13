@@ -1,7 +1,7 @@
-![Build](https://github.com/thevindu-w/clip_share_desktop/actions/workflows/build.yml/badge.svg?branch=master)
-![Check Style](https://github.com/thevindu-w/clip_share_desktop/actions/workflows/check_style.yml/badge.svg?branch=master)
-![Last commit](https://img.shields.io/github/last-commit/thevindu-w/clip_share_desktop.svg?color=yellow)
-![License](https://img.shields.io/github/license/thevindu-w/clip_share_desktop.svg?color=blue)
+![Build](https://github.com/thevindu-w/clip_share_client_desktop/actions/workflows/build.yml/badge.svg?branch=master)
+![Check Style](https://github.com/thevindu-w/clip_share_client_desktop/actions/workflows/check_style.yml/badge.svg?branch=master)
+![Last commit](https://img.shields.io/github/last-commit/thevindu-w/clip_share_client_desktop.svg?color=yellow)
+![License](https://img.shields.io/github/license/thevindu-w/clip_share_client_desktop.svg?color=blue)
 
 # ClipShare Desktop Client
 
@@ -40,11 +40,12 @@ You need to have the path to `java` set in the `PATH` environment variable if yo
 
 1. Start the client<br>
 You can run the jar file from the Terminal / Command Prompt.
-```bash
-java -jar ClipShare-3.0.0.jar
-```
-You will now enter into the ClipShare client CLI.
 
-2. Enter `sc` to scan for servers or enter the IPv4 address of the server.
-3. Enter the commands to use ClipShare. You can find the commands and their usage from the help option by issuing the command `h` at the prompt.
-4. Enter the command `q` to quit.
+    ```bash
+    java -jar ClipShare-3.0.0.jar
+    ```
+    You will now enter into the ClipShare client CLI.
+
+1. Enter `sc` to scan for servers or enter the IPv4 address of the server.
+1. Enter the commands to use ClipShare. You can find the commands and their usage from the help option by issuing the command `h` at the prompt.
+1. Enter the command `q` to quit.
