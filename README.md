@@ -7,10 +7,9 @@
 
 ### This is the desktop client of ClipShare.
 
-Share the clipboard between your phone and desktop. Share files and screenshots securely.
+Share the clipboard between your devices. Share files and screenshots securely.
 <br>
-ClipShare is a lightweight, cross-platform app for sharing copied text, files, and screenshots between an Android mobile
-and a desktop.
+ClipShare is a lightweight, cross-platform app for sharing copied text, files, and screenshots between devices.
 
 ## Download
 
