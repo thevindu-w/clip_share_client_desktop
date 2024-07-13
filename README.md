@@ -41,9 +41,9 @@ You need to have the path to `java` set in the `PATH` environment variable if yo
 1. Start the client<br>
 You can run the jar file from the Terminal / Command Prompt.
 ```bash
-  java -jar ClipShare-1.0.0.jar
-  ```
-  You will now enter into the ClipShare client CLI.
+java -jar ClipShare-3.0.0.jar
+```
+You will now enter into the ClipShare client CLI.
 
 2. Enter `sc` to scan for servers or enter the IPv4 address of the server.
 3. Enter the commands to use ClipShare. You can find the commands and their usage from the help option by issuing the command `h` at the prompt.

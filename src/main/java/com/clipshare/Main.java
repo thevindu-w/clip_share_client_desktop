@@ -28,6 +28,7 @@ import com.clipshare.netConnection.PlainConnection;
 import com.clipshare.netConnection.ServerConnection;
 import com.clipshare.platformUtils.Utils;
 import com.clipshare.protocol.Proto;
+import com.clipshare.protocol.Proto_v3;
 import com.clipshare.protocol.ProtocolSelector;
 import java.io.*;
 import java.net.*;
@@ -83,13 +84,17 @@ public class Main {
           System.out.println("h  : Display this help");
           System.out.println("g  : Get copied text");
           System.out.println("s  : Send copied text");
-          System.out.println("i  : Get screenshot");
+          System.out.println("i  : Get screenshot or copied image");
+          System.out.println("ic : Get copied image if available");
+          System.out.println(
+              "is [display_number] : Get screenshot even if image is copied\n"
+                  + "    display_number can be 1 or above. It can be ignored to use the default.");
           System.out.println("fg : Get copied files");
           System.out.println(
-              "fs [file_1] [file_2] [file_3] : Send files. File paths are separated by spaces\n"
-                  + "File paths may be absolute or relative to current working directory.");
+              "fs [file_1] [file_2] [file_3] : Send files.\n"
+                  + "    File paths may be absolute or relative to current working directory.");
           System.out.println("q  : Quit");
-        } else if (command.startsWith("fs")) {
+        } else if (command.startsWith("fs ")) {
           String[] md = command.split("\\s+");
           File[] files = new File[md.length - 1];
           for (int i = 1; i < md.length; i++) {
@@ -150,6 +155,45 @@ public class Main {
             System.out.println("Done");
           } else {
             System.out.println("Error while getting image!");
+          }
+          pr.close();
+        } else if (command.equals("is") || command.startsWith("is ")) {
+          String[] parts = command.split("\\s+", 2);
+          int display = 0;
+          if (parts.length >= 2) {
+            try {
+              display = Integer.parseInt(parts[1]);
+            } catch (NumberFormatException ignored) {
+              System.out.println("Invalid display number");
+            }
+          }
+          ServerConnection con = new PlainConnection(serverAddr, APP_PORT);
+          Utils utils = new Utils();
+          Proto pr = ProtocolSelector.getProto(con, utils);
+          if (pr instanceof Proto_v3) {
+            Proto_v3 pr3 = (Proto_v3) pr;
+            if (pr3.getScreenshot(display)) {
+              System.out.println("Done");
+            } else {
+              System.out.println("Error while getting image!");
+            }
+          } else {
+            System.out.println("The server does not support this option");
+          }
+          pr.close();
+        } else if (command.equals("ic")) {
+          ServerConnection con = new PlainConnection(serverAddr, APP_PORT);
+          Utils utils = new Utils();
+          Proto pr = ProtocolSelector.getProto(con, utils);
+          if (pr instanceof Proto_v3) {
+            Proto_v3 pr3 = (Proto_v3) pr;
+            if (pr3.getCopiedImage()) {
+              System.out.println("Done");
+            } else {
+              System.out.println("Error while getting image!");
+            }
+          } else {
+            System.out.println("The server does not support this option");
           }
           pr.close();
         }
