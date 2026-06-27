@@ -5,6 +5,10 @@
 
 # ClipShare Desktop Client
 
+---
+> **Archival notice:** This desktop client is deprecated and no longer maintained. Please use the new desktop client available at [https://github.com/thevindu-w/clip_share_desktop](https://github.com/thevindu-w/clip_share_desktop).
+---
+
 ### This is the desktop client of ClipShare.
 
 Share the clipboard between your devices. Share files and screenshots securely.
